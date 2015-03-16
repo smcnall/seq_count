@@ -1,6 +1,6 @@
 #small bit of code that simply loops through a file and counts how many lines 
 #start with the symbol ">"
-a = open('/home/smcnall/Projects/seq_count/rna.fa')
+a = open('/home/smcnall/Projects/seq_count/NC_016863.faa')
 ar = a.readlines()
 #counting variable for keeping track of the number of sequences
 c = 0
@@ -16,7 +16,7 @@ f = []
 #used to convert strings in f back to integers
 x = []
 for i in ar:
-	if i[0] in ('A','T','G','C'):
+	if i[0] not in ('>'):
 		d += len(i)
 		g += len(i)
     	if i[0] in ('>'):
