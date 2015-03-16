@@ -1,6 +1,16 @@
 #small bit of code that simply loops through a file and counts how many lines 
 #start with the symbol ">"
-a = open('/home/smcnall/Projects/seq_count/NC_016863.faa')
+#standard method of file input:
+#a = open('/home/smcnall/Projects/seq_count/rna.fa')
+
+#new attempt at file input:
+file = raw_input("filepath of .fa file:")
+#now we have to make sure that this is not compressed
+import gzip
+if file.endswith(".gz"):
+	a = gzip.open(file)
+else:
+	a = open(file)
 ar = a.readlines()
 #counting variable for keeping track of the number of sequences
 c = 0
@@ -8,9 +18,6 @@ c = 0
 d = 0
 #a running variable for the total base pairs to be used later for average sequence length
 g = 0
-#string lengths stored as string variables, may need to be taken out at a later point but for now
-#this is the only way to make it go off without an error
-e = ('')
 #list of sequence lengths
 f = []
 #used to convert strings in f back to integers
@@ -21,14 +28,11 @@ for i in ar:
 		g += len(i)
     	if i[0] in ('>'):
         	c += 1
-		e = str(d)
 		if d != 0:
-			f.append(e)
-		d = 0
-for n in f:
-	x.append(int(n))	
+			f.append(d)
+		d = 0	
 		
 print "Number of sequences:",c
-print "Range of sequence length:",min(x),"-",max(x)
+print "Range of sequence length:",min(f),"-",max(f)
 print "Average sequence length:", g/c
 
