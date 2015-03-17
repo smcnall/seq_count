@@ -7,6 +7,7 @@
 file = raw_input("filepath of .fa file:")
 #now we have to make sure that this is not compressed
 import gzip
+import json
 if file.endswith(".gz"):
 	a = gzip.open(file)
 else:
@@ -40,12 +41,11 @@ print "Average sequence length:", g/c
 #now to create our table that designs a table listing th sequence id's and length associated with that id
 #for the time being the variable f will have to be transformed back into an
 #list of strings so that it can be transformed into a table below
-b = 0
-p = []
-for l in f:
-	b = str(l)
-	p.append(b)
-ref_code = dict(zip(x,p))
+ref_code = dict(zip(x,f))
+output_file = raw_input("name of file to write to?(will create one if necessary):")
+with open(output_file, 'w') as outfile:
+	json.dump(ref_code, outfile)
 
-print '\t'.join(ref_code)
-print '\t'.join(ref_code.values())
+#json.dump(ref_code, output.tab)
+#print '\t'.join(ref_code)
+#print '\t'.join(ref_code.values())
