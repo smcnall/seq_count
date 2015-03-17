@@ -21,9 +21,11 @@ d = 0
 g = 0
 #list of sequence lengths
 f = []
-#used to convert strings in f back to integers
+#collects a list of strings containing only sequence id's. This will need to be updated so that it works for
+#any input file and not just those with sequence id's that are 9 numbers long
 x = []
 for i in ar:
+	#counts this as a sequence and stops the count on length of sequence
     	if i[0] in ('>'):
         	c += 1
 		if d != 0:
@@ -31,10 +33,12 @@ for i in ar:
 			x.append(h)
 			f.append(d)
 		d = 0	
+	#running counter for sequence length and overall base pair count
 	else:
                 d += len(i)
                 g += len(i)
 
+#quick output of summmary
 print "Number of sequences:",c
 print "Range of sequence length:",min(f),"-",max(f)
 print "Average sequence length:", g/c
@@ -46,6 +50,4 @@ output_file = raw_input("name of file to write to?(will create one if necessary)
 with open(output_file, 'w') as outfile:
 	json.dump(ref_code, outfile)
 
-#json.dump(ref_code, output.tab)
-#print '\t'.join(ref_code)
-#print '\t'.join(ref_code.values())
+
