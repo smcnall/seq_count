@@ -23,16 +23,29 @@ f = []
 #used to convert strings in f back to integers
 x = []
 for i in ar:
-	if i[0] not in ('>'):
-		d += len(i)
-		g += len(i)
     	if i[0] in ('>'):
         	c += 1
 		if d != 0:
+			h = i[1:13]
+			x.append(h)
 			f.append(d)
 		d = 0	
-		
+	else:
+                d += len(i)
+                g += len(i)
+
 print "Number of sequences:",c
 print "Range of sequence length:",min(f),"-",max(f)
 print "Average sequence length:", g/c
+#now to create our table that designs a table listing th sequence id's and length associated with that id
+#for the time being the variable f will have to be transformed back into an
+#list of strings so that it can be transformed into a table below
+b = 0
+p = []
+for l in f:
+	b = str(l)
+	p.append(b)
+ref_code = dict(zip(x,p))
 
+print '\t'.join(ref_code)
+print '\t'.join(ref_code.values())
