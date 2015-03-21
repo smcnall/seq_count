@@ -31,10 +31,30 @@ for i in seqs:
 	#adds the length of that string to a new list
 	seq_lengths.append(len(seqs3))
 #used to verify that the number of sequences and the number of sequence lengths are the same
-print len(seq_ids),len(seq_lengths)
-
+#print len(seq_ids),len(seq_lengths)
+print "Number of sequences in file:", num_seq
+print "Range of sequence lengths:" , min(seq_lengths), "-" , max (seq_lengths)
+print "Average sequence length:", sum(seq_lengths)/len(seq_lengths)
 #now to add all the flashy print functions and transfer the code that writes the outputs to a tab
 #deliniated file
-
-
+ref_code = dict(zip(seq_ids,seq_lengths))
+import csv
+#with open('output.tab', 'w') as output:
+	#for j in seq_ids:
+	#	for k in seq_lengths:
+	#		output.write(j)		
+	#		output.write("\t")
+	#		output.write(str(k))
+	#		output.write("\n")
+	#seq_writer = csv.writer(output, dialect = 'excel-tab',
+         #                   quoting=csv.QUOTE_MINIMAL)
+	#for j,k in seq_ids,seq_lengths:
+	#	seq_writer.writerow(j + k)
+print ref_code
+#with open('output.tab', 'w') as csvfile:
+ #   fieldnames = ['seq_ids','seq_lengths']
+#  writer = csv.DictWriter(csvfile, fieldnames = fieldnames, dialect = 'excel-tab')
+	
+    #writer.writerows({'seq_ids': seq_ids, 'seq_lengths':seq_lengths})
+#    writer.writerows(ref_code)
 
