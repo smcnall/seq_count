@@ -1,4 +1,4 @@
-file = raw_input("filepath of .fa file:")
+file = raw_input("file path of .fa file:")
 #now we have to make sure that this is not compressed
 import gzip
 import re
@@ -35,26 +35,26 @@ for i in seqs:
 print "Number of sequences in file:", num_seq
 print "Range of sequence lengths:" , min(seq_lengths), "-" , max (seq_lengths)
 print "Average sequence length:", sum(seq_lengths)/len(seq_lengths)
-#now to add all the flashy print functions and transfer the code that writes the outputs to a tab
-#deliniated file
-ref_code = dict(zip(seq_ids,seq_lengths))
+#the following prints the sequence ids and lengths to the chosen file in tsv format
+outfile = raw_input("what file should this write to?:")
+
+#creates many different dictionaries that can feed into the csv.DictWriter function
+#correctly
+seq_array = []
+counter = 0
+for m in seq_ids:
+	seq_array.append({'seq_ids':seq_ids[counter], 'seq_lengths':seq_lengths[counter]})
+	counter += 1
+
 import csv
-#with open('output.tab', 'w') as output:
-	#for j in seq_ids:
-	#	for k in seq_lengths:
-	#		output.write(j)		
-	#		output.write("\t")
-	#		output.write(str(k))
-	#		output.write("\n")
-	#seq_writer = csv.writer(output, dialect = 'excel-tab',
-         #                   quoting=csv.QUOTE_MINIMAL)
-	#for j,k in seq_ids,seq_lengths:
-	#	seq_writer.writerow(j + k)
-print ref_code
-#with open('output.tab', 'w') as csvfile:
- #   fieldnames = ['seq_ids','seq_lengths']
-#  writer = csv.DictWriter(csvfile, fieldnames = fieldnames, dialect = 'excel-tab')
-	
-    #writer.writerows({'seq_ids': seq_ids, 'seq_lengths':seq_lengths})
-#    writer.writerows(ref_code)
+#still needs to be checked against a program that only takes tab - delimited files 
+fieldnames = ['seq_ids', 'seq_lengths']
+csvfile = open(outfile, 'wb')
+writer = csv.DictWriter(csvfile, fieldnames = fieldnames, dialect = 'excel-tab')
+writer.writerow(dict((fn,fn) for fn in fieldnames))
+for row in seq_array:
+	writer.writerow(row)
+
+csvfile.close()	
+    
 
