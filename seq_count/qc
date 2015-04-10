@@ -1,0 +1,108 @@
+#!/usr/bin/env python
+
+#need to add an arguments section
+
+def CheckFormat(a):
+	header = a.readline()
+        if header[0] in "@":
+                type_file = 'FASTQ'
+        elif header[0] in ">":
+                type_file = 'FASTA'
+        else:
+                type_file = 'BREAK'
+                print "incorrect file type"
+	a.close()
+        return type_file
+
+
+#this will be part of a definition when the argument setcion is written
+file = raw_input("file path of .fa file:")
+
+import gzip
+import re
+import json
+if file.endswith(".gz"):
+        a = gzip.open(file)
+else:
+        a = open(file)
+
+result = CheckFormat(a)
+a.close()
+
+if result == 'FASTA':
+	if file.endswith(".gz"):
+	        a = gzip.open(file)
+	else:
+        	a = open(file)
+	b = a.read()
+	num_seq = b.count('>')
+
+	seq_ids = re.findall(r'\gi\|\d*',b)
+	seqs = re.split(r'\>',b)
+	seqs.remove(seqs[0])
+	seq_lengths = []
+	for i in seqs:
+        #takes each sequence and splits it back into rows
+	        seqs2 = re.split(r"\n",i)
+        #removes the header row
+	        seqs2.remove(seqs2[0])
+        #combines the remaining sequence into a single string
+	        seqs3 = ''.join(seqs2)
+        #adds the length of that string to a new list
+	        seq_lengths.append(len(seqs3))
+#used to verify that the number of sequences and the number of sequence lengths are the same
+#print len(seq_ids),len(seq_lengths)
+	#short info section, hopefully to be added as just an option later on
+	print "Number of sequences in file:", num_seq
+	print "Range of sequence lengths:" , min(seq_lengths), "-" , max (seq_lengths)
+	print "Average sequence length:", sum(seq_lengths)/len(seq_lengths)
+	
+elif result == 'FASTQ':
+	if file.endswith(".gz"):
+        	f = gzip.open(file)
+	else:
+        	f = open(file)
+
+	headers = []
+	seqs = []
+	while f:
+		#this section reads the lines of a fastq file four at a time and assigns each to a variable(header,seq,h2,phred)<-THANKS CHRIS!!!
+       	 	header = f.readline()
+        	j = re.findall(r'\@\w+\d+\.\d+',header)
+        	headers.append(j)
+        	seq = f.readline()
+        	k = len(seq)
+        	seqs.append(k)
+        	h2 = f.readline()
+       		phred = f.readline()
+        	if header in ("\n"):
+        	        break
+	#preps these for the print function below
+	seq_ids = headers
+	seq_lengths = seqs
+
+
+else:
+	print "Sorry! you must not have the correct file type!"
+
+outfile = raw_input("what file should this write to?:")
+
+#creates many different dictionaries that can feed into the csv.DictWriter function
+#correctly
+seq_array = []
+counter = 0
+for m in seq_ids:
+        seq_array.append({'seq_ids':seq_ids[counter], 'seq_lengths':seq_lengths[counter]})
+        counter += 1
+
+import csv
+#still needs to be checked against a program that only takes tab - delimited files 
+fieldnames = ['seq_ids', 'seq_lengths']
+csvfile = open(outfile, 'wb')
+writer = csv.DictWriter(csvfile, fieldnames = fieldnames, dialect = 'excel-tab')
+writer.writerow(dict((fn,fn) for fn in fieldnames))
+for row in seq_array:
+        writer.writerow(row)
+
+csvfile.close()
+
